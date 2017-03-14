@@ -49,9 +49,17 @@ def make_new_student(first_name, last_name, github):
     print "Successfully added student: {} {}".format(first_name, last_name)
 
 
-def get_project_by_title(title):
+def get_project_by_title(user_entered_title):
     """Given a project title, print information about the project."""
-    pass
+
+    QUERY = """
+        SELECT title, description, max_grade
+        FROM projects
+        WHERE  title = :placeholder_title
+        """
+    db_cursor = db.session.execute(QUERY, {'placeholder_title': user_entered_title})
+    row = db_cursor.fetchone()
+    print "Project_Title is: {}, description: {}, max_grade: {}".format(row[0], row[1], row[2])
 
 
 def get_grade_by_github_title(github, title):
@@ -94,6 +102,6 @@ if __name__ == "__main__":
     app = Flask(__name__)
     connect_to_db(app)
 
-    handle_input()
+    # handle_input()
 
     db.session.close()
